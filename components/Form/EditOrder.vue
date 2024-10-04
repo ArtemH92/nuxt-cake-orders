@@ -1,16 +1,22 @@
 <script setup>
-import { Choices } from '~/utils/choices';
+import { useOrderStore } from '~/store/order';
 import { useForm } from 'vee-validate'
 import { schemaOrder } from '~/schemas';
-import { useOrderStore } from '~/store/order';
 
 const store = useOrderStore()
+const { id } = useRoute().params
+onMounted(async () => {
+  await store.getOrder(id)
+  setValues(store.order);
+});
+
+const disabled = ref(true)
 
 const { dessertChoice, cakeTypeChoice, cupcakesTypeChoice, fillingChoice } = Choices
 
-const { defineField, handleSubmit, errors } = useForm({
-  validationSchema: schemaOrder
-})
+const { defineField, handleSubmit, errors, setValues } = useForm({
+    validationSchema: schemaOrder,
+  })
 
 const [dessert] = defineField('dessert')
 const [cakeType] = defineField('cakeType')
@@ -36,15 +42,19 @@ const ChangeHandler = (dessert) => {
 const date = ref(new Date())
 date.value.setDate(date.value.getDate() + 3)
 
-const finish = handleSubmit((data) => {
-  data.status = 'inProcessing'
-  store.addOrder(data)
-
+const handleFinish = handleSubmit((data) => {
+  store.editOrder(data)
 })
+
+const handleResetForm = () => {
+  disabled.value = true
+  store.getOrder(id)
+}
 </script>
 
 <template>
-  <form autocomplete="off" @submit.prevent="finish()" class="flex flex-col gap-6 mt-5">
+  
+  <form autocomplete="off" @submit.prevent="handleFinish" class="flex flex-col gap-6 mt-5" @reset="handleResetForm()">
 
     <FormFieldsSelectForm
       v-model="dessert"
@@ -52,22 +62,25 @@ const finish = handleSubmit((data) => {
       :errors="!errors.dessert ? '' : errors.dessert"
       label="Изделие"
       @change="ChangeHandler(dessert)"
+      :disabled="disabled"
     />
 
-     <FormFieldsSelectForm
+    <FormFieldsSelectForm
       v-if="dessert === 'cake'"
       v-model="cakeType"
       :options="cakeTypeChoice"
       :errors="!errors.cakeType ? '' : errors.cakeType"
       label="Торт"
+      :disabled="disabled"
     />
 
-     <FormFieldsSelectForm
+    <FormFieldsSelectForm
       v-if="dessert === 'cupcake'"
       v-model="cupcakesType"
       :options="cupcakesTypeChoice"
       :errors="!errors.cupcakesType ? '' : errors.cupcakesType"
       label="Капкейк"
+      :disabled="disabled"
     />
 
     <FormFieldsSelectForm
@@ -76,6 +89,7 @@ const finish = handleSubmit((data) => {
       :options="fillingChoice"
       :errors="!errors.filling ? '' : errors.filling"
       label="Начинка"
+      :disabled="disabled"
     />
 
     <FormFieldsInputNum 
@@ -83,6 +97,7 @@ const finish = handleSubmit((data) => {
       v-model="quantity" 
       label="Количество"
       :errors="!errors.quantity ? '' : errors.quantity"
+      :disabled="disabled"
     />
 
     <FormFieldsDateInput
@@ -90,10 +105,17 @@ const finish = handleSubmit((data) => {
       :errors="!errors.dateTime ? '' : errors.dateTime"
       :min-date="date"
       label="Дата и время"
+      :disabled="disabled"
     />
 
-    <FormFieldsTextareaField v-model="notes" label="Примечания" /> 
+    <FormFieldsTextareaField v-model="notes" label="Примечания" :disabled="disabled" /> 
 
-    <Button label="Создать" type="submit" class="mx-auto" />
+    <div class="flex justify-center">
+      <Button label="Редактировать" v-if="disabled" @click="disabled = false" />
+      <div v-else class="w-full flex justify-between">
+        <Button label="Сохранить" type="submit" />
+        <Button label="Отмена" type="reset" />
+      </div>
+    </div>
   </form>
 </template>

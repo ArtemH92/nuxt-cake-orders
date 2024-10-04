@@ -1,11 +1,3 @@
-<script setup>
-import { useOrderStore } from '~/store/order';
-
-const { id } = useRoute().params
-const store = useOrderStore()
-onMounted(() => store.getOrder(id))
-</script>
-
 <template>
   <div>
     <PageTitle
@@ -15,7 +7,7 @@ onMounted(() => store.getOrder(id))
     />
     <div class="flex justify-center mt-5">
       <div class="card">
-        {{ store.order }}
+        <FormEditOrder />
       </div>
     </div>
   </div>

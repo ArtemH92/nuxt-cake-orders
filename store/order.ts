@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useToast } from 'primevue/usetoast'
 import api from '~/api'
-import { AllOrders } from '~/schemas/models'
+import { AllOrders, SingleOrder } from '~/schemas/models'
 
 interface Order {
   id?: string
@@ -42,7 +42,7 @@ export const useOrderStore = defineStore('orders', () => {
     loading.value = true
     try {
       const response = await api.get(`/orders/${id}`)
-      Object.assign(order, response.data)
+      Object.assign(order, new SingleOrder(response.data))
     } catch (err) {
       toast.add({
         severity: 'error',
@@ -81,7 +81,7 @@ export const useOrderStore = defineStore('orders', () => {
   const editOrder = async (data: Order) => {
     loading.value = true
     try {
-      const response = await api.post(`/orders/edit/${data.id}`, data)
+      const response = await api.put(`/orders/edit/${data.id}`, data)
       toast.add({
         severity: 'success',
         summary: 'Успех!',
