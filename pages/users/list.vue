@@ -1,0 +1,3 @@
+<template>
+  <TableUsers />
+</template>

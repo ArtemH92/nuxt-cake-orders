@@ -1,0 +1,26 @@
+@import 'primeicons/primeicons.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .bg-wrapper {
+    background: -webkit-linear-gradient(
+      45deg,
+      rgb(128, 97, 133),
+      rgb(246, 70, 233),
+      rgb(147, 138, 221)
+    );
+    background: -moz-linear-gradient(
+      45deg,
+      rgb(128, 97, 133),
+      rgb(246, 70, 233),
+      rgb(147, 138, 221)
+    );
+    background: linear-gradient(45deg, rgb(128, 97, 133), rgb(246, 70, 233), rgb(147, 138, 221));
+  }
+  .card {
+    @apply p-3 rounded-md bg-white shadow-md;
+  }
+}
