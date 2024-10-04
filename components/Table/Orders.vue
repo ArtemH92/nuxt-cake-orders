@@ -7,14 +7,24 @@ const store = useOrderStore()
 onMounted(() => store.getAll())
 
 const modalVisible = ref(false)
-const id = ref('')
+const order = reactive({})
+const modalValue = ref()
 
-const handleModal = (i) => {
-  id.value = i
+const handleModal = (data, operation) => {
+  Object.assign(order, data)
   modalVisible.value = true
+  modalValue.value = operation
 }
-const handleRemove = () => {
-  store.removeOrder(id.value)
+const handleOperation = () => {
+  if(modalValue.value === 'remove') {
+    store.removeOrder(order.id)
+  } else if(modalValue.value === 'edit') {
+    const data = {
+      id: order.id,
+      status: order.status === 'inProcessing' ? 'inProgress' : order.status === 'inProgress' ? 'done' : ''
+    }
+    store.editOrder(data)
+  }
   modalVisible.value = false
 }
 </script>
@@ -58,7 +68,7 @@ const handleRemove = () => {
             <Button
               label="Удалить"
               severity="danger"
-              @click="handleModal(data.id)"
+              @click="handleModal(data, 'remove')"
               size="small"
             />
             <Button
@@ -70,7 +80,7 @@ const handleRemove = () => {
               :label="data.labelStatusBtn"
               v-if="data.status != 'done'"
               :severity="data.severityTag"
-              @click="emit('status', data)"
+              @click="handleModal(data, 'edit')"
               size="small"
             />
           </div>
@@ -88,6 +98,6 @@ const handleRemove = () => {
       </Column>
 
   </DataTable>
-  <ConfirmModal v-model="modalVisible" @cancel="modalVisible = false" @confirm="handleRemove()" />
+  <ConfirmModal v-model="modalVisible" @cancel="modalVisible = false" @confirm="handleOperation()" />
   </div>
 </template>
