@@ -13,9 +13,17 @@ interface User {
 export const useUsersStore = defineStore('users', () => {
   const users = reactive<User[] | []>([])
   const user = reactive<User | {}>({})
-  const loading = ref<boolean>(false)
+  const loading = ref<boolean>(true)
   const token = ref<string | null>(null)
   const toast = useToast()
+
+  const isAuth = () => {
+    token.value = localStorage.getItem('token')
+    if(!token.value) {
+      navigateTo('/Login')
+    }
+    loading.value = false
+  }
 
   const login = async (data: User) => {
     loading.value = true
@@ -157,12 +165,14 @@ export const useUsersStore = defineStore('users', () => {
     users,
     user,
     loading,
+    isAuth,
     login,
     register,
     currentUser,
     getAllUsers,
     editUser,
     logout,
-    remove
+    remove,
+    token
   }
 })

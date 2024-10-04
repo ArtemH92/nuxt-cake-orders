@@ -6,9 +6,7 @@
       title="Редактирование пользователя"
     />
     <div class="flex justify-center mt-5">
-      <div class="card">
-        <FormEditUserForm />
-      </div>
+      <FormEditUserForm />
     </div>
   </div>
 </template>

@@ -1,4 +1,4 @@
-export const MenuItems = (id: string, confirmModalVisible: boolean) => {
+export const MenuItems = (id: string, setConfirmModalVisible: Function) => {
   return [
     {
       label: 'Список пользователей',
@@ -14,7 +14,7 @@ export const MenuItems = (id: string, confirmModalVisible: boolean) => {
     },
     {
       label: 'Выйти',
-      command: () => (confirmModalVisible = true)
+      command: () => setConfirmModalVisible(true)
     }
   ]
 }

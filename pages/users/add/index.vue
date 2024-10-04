@@ -6,9 +6,7 @@
       title="Создание пользователя"
     />
     <div class="flex justify-center mt-5">
-      <div class="card">
-        <FormCreateUserForm />
-      </div>
+      <FormCreateUserForm />
     </div>
   </div>
 </template>

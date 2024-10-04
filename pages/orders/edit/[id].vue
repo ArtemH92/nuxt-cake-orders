@@ -6,9 +6,7 @@
       title="Редактирование заказа"
     />
     <div class="flex justify-center mt-5">
-      <div class="card">
-        <FormEditOrder />
-      </div>
+      <FormEditOrder />
     </div>
   </div>
 </template>

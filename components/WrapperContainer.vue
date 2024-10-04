@@ -2,9 +2,7 @@
 import { useUsersStore } from '~/store/users'
 
 const userStore = useUsersStore()
-onMounted(() => {
-  userStore.currentUser()
-})
+onMounted(() => userStore.currentUser())
 </script>
 
 <template>

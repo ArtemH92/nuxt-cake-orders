@@ -5,7 +5,11 @@ import { MenuItems } from './ItemsDropdown'
 const store = useUsersStore()
 const menu = ref()
 const confirmModalVisible = ref(false)
-const items = reactive(MenuItems(store.user.id, confirmModalVisible))
+
+const setConfirmModalVisible = (value) => {
+  confirmModalVisible.value = value
+}
+const items = reactive(MenuItems(store.user.id, setConfirmModalVisible))
 
 const toggle = (event) => {
   menu.value.toggle(event)
